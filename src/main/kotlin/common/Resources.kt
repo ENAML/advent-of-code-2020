@@ -33,7 +33,8 @@ internal object Resources {
        */
       fun fromFile(fileName: String): Resource {
         val uri = fileNameToUri(fileName)
-        val lines = File(uri).readLines()
+        val file = File(uri)
+        val lines = file.readLines()
         return Resource(lines)
       }
 

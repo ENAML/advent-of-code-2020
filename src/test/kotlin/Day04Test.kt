@@ -1,11 +1,17 @@
-import common.Coord
 import common.Resources
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertTrue
+//import org.junit.jupiter.api.Assertions.assertTrue
+//import org.junit.jupiter.api.Assertions.assertFalse
+//import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
-val testInput = """
+class Day04Test {
+  private fun getRealInput() = Resources.Resource.fromFile("day04_1.txt").asLines()
+
+  val testInput = """
   ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
   byr:1937 iyr:2017 cid:147 hgt:183cm
 
@@ -21,57 +27,54 @@ val testInput = """
   iyr:2011 ecl:brn hgt:59in
 """.trimIndent().split("\n")
 
-class Day04Test {
-  private fun getRealInput() = Resources.Resource.fromFile("day04_1.txt").asLines()
+  @Nested
+  inner class Part1 {
+    @Test
+    fun `test 1`() {
+      val expectedValidPassports = 2
 
-  @Test
-  fun `It works`() {
-    assertEquals(true, true)
+      val result = Day04.Part1.solve(testInput)
+
+      assertEquals(expectedValidPassports, result)
+    }
+
+    @Test
+    fun `with real data`() {
+      val input = getRealInput()
+      val expectedValidPassports = 264
+
+      val result = Day04.Part1.solve(input)
+
+      assertEquals(expectedValidPassports, result)
+    }
   }
 
-  @Test
-  fun `Part 1 - Test 1`() {
-    val expectedValidPassports = 2
+  @Nested
+  inner class Part2 {
+    @Test
+    fun `passport field validation`() {
+      assertTrue(Day04.validatePassportField("byr", "2002"))
+      assertFalse(Day04.validatePassportField("byr", "2003"))
 
-    val result = Day04.Part1.solve(testInput)
+      assertTrue(Day04.validatePassportField("hgt", "60in"))
+      assertTrue(Day04.validatePassportField("hgt", "190cm"))
+      assertFalse(Day04.validatePassportField("hgt", "190in"))
+      assertFalse(Day04.validatePassportField("hgt", "190"))
 
-    assertEquals(expectedValidPassports, result)
-  }
+      assertTrue(Day04.validatePassportField("hcl", "#123abc"))
+      assertFalse(Day04.validatePassportField("hcl", "#123abz"))
+      assertFalse(Day04.validatePassportField("hcl", "123abc"))
 
-  @Test
-  fun `Part 1 - Real Data`() {
-    val input = getRealInput()
-    val expectedValidPassports = 264
+      assertTrue(Day04.validatePassportField("ecl", "brn"))
+      assertFalse(Day04.validatePassportField("ecl", "wat"))
 
-    val result = Day04.Part1.solve(input)
+      assertTrue(Day04.validatePassportField("pid", "000000001"))
+      assertFalse(Day04.validatePassportField("pid", "0123456789"))
+    }
 
-    assertEquals(expectedValidPassports, result)
-  }
-
-  @Test
-  fun `Part 2 - Test - Passport Field Tests`() {
-    assertTrue(Day04.validatePassportField("byr", "2002"))
-    assertFalse(Day04.validatePassportField("byr", "2003"))
-
-    assertTrue(Day04.validatePassportField("hgt", "60in"))
-    assertTrue(Day04.validatePassportField("hgt", "190cm"))
-    assertFalse(Day04.validatePassportField("hgt", "190in"))
-    assertFalse(Day04.validatePassportField("hgt", "190"))
-
-    assertTrue(Day04.validatePassportField("hcl", "#123abc"))
-    assertFalse(Day04.validatePassportField("hcl", "#123abz"))
-    assertFalse(Day04.validatePassportField("hcl", "123abc"))
-
-    assertTrue(Day04.validatePassportField("ecl", "brn"))
-    assertFalse(Day04.validatePassportField("ecl", "wat"))
-
-    assertTrue(Day04.validatePassportField("pid", "000000001"))
-    assertFalse(Day04.validatePassportField("pid", "0123456789"))
-  }
-
-  @Test
-  fun `Part 2 - Test - All Invalid`() {
-    val input = """
+    @Test
+    fun `with all invalid data`() {
+      val input = """
       eyr:1972 cid:100
       hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
 
@@ -87,14 +90,14 @@ class Day04Test {
       pid:3556412378 byr:2007
     """.trimIndent().split("\n")
 
-    val result = Day04.Part2.solve(input)
+      val result = Day04.Part2.solve(input)
 
-    assertEquals(0, result)
-  }
+      assertEquals(0, result)
+    }
 
-  @Test
-  fun `Part 2 - Test - All Valid`() {
-    val input = """
+    @Test
+    fun `with all valid data`() {
+      val input = """
       pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
       hcl:#623a2f
 
@@ -109,18 +112,21 @@ class Day04Test {
       iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
     """.trimIndent().split("\n")
 
-    val result = Day04.Part2.solve(input)
+      val result = Day04.Part2.solve(input)
 
-    assertEquals(4, result)
+      assertEquals(4, result)
+    }
+
+    @Test
+    fun `with real data`() {
+      val input = getRealInput()
+      val expectedValidPassports = 224
+
+      val result = Day04.Part2.solve(input)
+
+      assertEquals(expectedValidPassports, result)
+    }
   }
 
-  @Test
-  fun `Part 2 - Real Data`() {
-    val input = getRealInput()
-    val expectedValidPassports = 264
 
-    val result = Day04.Part2.solve(input)
-
-    assertEquals(expectedValidPassports, result)
-  }
 }
