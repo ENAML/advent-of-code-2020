@@ -1,7 +1,9 @@
+import common.splitByEmptyLines
+
 /**
- * Day 4 challenge.
+ * Day 6 challenge.
  *
- * Description here: https://adventofcode.com/2020/day/4
+ * Description here: https://adventofcode.com/2020/day/6
  */
 object Day06 {
   object Part1 {
@@ -31,15 +33,3 @@ object Day06 {
   }
 }
 
-fun List<String>.splitByEmptyLines(): List<List<String>> {
-  check(this.isNotEmpty())
-  val lineGroups = mutableListOf<MutableList<String>>(mutableListOf())
-  for (line in this) {
-    if (line.isEmpty()) {
-      lineGroups.add(mutableListOf())
-    } else {
-      lineGroups.last().add(line)
-    }
-  }
-  return lineGroups.map { it.toList() }.toList()
-}
